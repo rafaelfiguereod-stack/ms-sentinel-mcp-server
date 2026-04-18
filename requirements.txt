@@ -28,9 +28,9 @@ azure-common==1.1.28 \
     #   azure-mgmt-authorization
     #   azure-mgmt-loganalytics
     #   azure-mgmt-securityinsight
-azure-core==1.33.0 \
-    --hash=sha256:9b5b6d0223a1d38c37500e6971118c1e0f13f54951e6893968b38910bc9cda8f \
-    --hash=sha256:f367aa07b5e3005fec2c1e184b882b0b039910733907d001c20fb08ebb8c0eb9
+azure-core==1.38.0 \
+    --hash=sha256:8194d2682245a3e4e3151a667c686464c3786fed7918b394d035bdcd61bb5993 \
+    --hash=sha256:ab0c9b2cd71fecb1842d52c965c95285d3cfb38902f6766e4a471f1cd8905335
     # via
     #   azure-identity
     #   azure-mgmt-core
