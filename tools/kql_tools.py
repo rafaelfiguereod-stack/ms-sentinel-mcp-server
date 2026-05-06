@@ -12,9 +12,10 @@ from mcp.server.fastmcp import Context, FastMCP
 
 from tools.base import MCPToolBase
 from utilities.kql_validator import validate_kql
+from utilities.task_manager import run_in_thread
 
 
-class KQLValidateTool(MCPToolBase):
+class KQLValidateTool(MCPToolBase):  # pylint: disable=too-few-public-methods
     """
     Tool for validating KQL (Kusto Query Language) syntax locally.
 
@@ -32,12 +33,6 @@ class KQLValidateTool(MCPToolBase):
 
     name = "sentinel_query_validate"
     description = "Validate KQL Query Syntax locally"
-
-    def dummy_public_method(self):
-        """
-        Dummy public method to satisfy pylint's too-few-public-methods warning.
-        """
-        return None
 
     async def run(self, ctx: Context, **kwargs):
         """
@@ -61,7 +56,7 @@ class KQLValidateTool(MCPToolBase):
                 "errors": ["Missing required parameter: query"],
             }
         try:
-            is_valid, errors = validate_kql(query)
+            is_valid, errors = await run_in_thread(validate_kql, query)
             if is_valid:
                 return {
                     "result": (

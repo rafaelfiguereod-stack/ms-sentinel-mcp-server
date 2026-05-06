@@ -7,6 +7,7 @@ Tools are compatible with both MCP server context and direct invocation for inte
 
 from mcp.server.fastmcp import Context
 from tools.base import MCPToolBase
+from utilities.task_manager import run_in_thread
 
 
 class SentinelConnectorsListTool(MCPToolBase):
@@ -38,7 +39,8 @@ class SentinelConnectorsListTool(MCPToolBase):
             return {"error": "Missing Azure context for listing data connectors."}
         try:
             client = self.get_securityinsight_client(subscription_id)
-            connectors = client.data_connectors.list(
+            connectors = await run_in_thread(
+                client.data_connectors.list,
                 resource_group_name=resource_group,
                 workspace_name=workspace_name,
             )
@@ -102,7 +104,8 @@ class SentinelConnectorsGetTool(MCPToolBase):
             return {"error": "Missing required parameter: data_connector_id"}
         try:
             client = self.get_securityinsight_client(subscription_id)
-            connector = client.data_connectors.get(
+            connector = await run_in_thread(
+                client.data_connectors.get,
                 resource_group_name=resource_group,
                 workspace_name=workspace_name,
                 data_connector_id=data_connector_id,
