@@ -1,6 +1,7 @@
 from mcp.server.fastmcp import Context, FastMCP
 
 from tools.base import MCPToolBase
+from utilities.task_manager import run_in_thread
 
 # FILE: tools/hunting_tools.py
 # DESCRIPTION:
@@ -100,8 +101,10 @@ class SentinelHuntingQueriesListTool(MCPToolBase):
             {t.strip().lower() for t in techniques.split(",")} if techniques else None
         )
         try:
-            searches = client.saved_searches.list_by_workspace(
-                resource_group, workspace_name
+            searches = await run_in_thread(
+                client.saved_searches.list_by_workspace,
+                resource_group_name=resource_group,
+                workspace_name=workspace_name,
             )
             for s in getattr(searches, "value", []):
                 tags, s_tactics, s_techniques = extract_tags_tactics_techniques(s)
@@ -152,8 +155,10 @@ class SentinelHuntingQueriesCountByTacticTool(MCPToolBase):
         client = self.get_loganalytics_client(subscription_id)
         tactic_map = {}
         try:
-            searches = client.saved_searches.list_by_workspace(
-                resource_group, workspace_name
+            searches = await run_in_thread(
+                client.saved_searches.list_by_workspace,
+                resource_group_name=resource_group,
+                workspace_name=workspace_name,
             )
             for s in getattr(searches, "value", []):
                 _, s_tactics, _ = extract_tags_tactics_techniques(s)
@@ -237,8 +242,10 @@ class SentinelHuntingQueryGetTool(MCPToolBase):
         workspace_name, resource_group, subscription_id = self.get_azure_context(ctx)
         client = self.get_loganalytics_client(subscription_id)
         try:
-            searches = client.saved_searches.list_by_workspace(
-                resource_group, workspace_name
+            searches = await run_in_thread(
+                client.saved_searches.list_by_workspace,
+                resource_group_name=resource_group,
+                workspace_name=workspace_name,
             )
             match = None
             for s in getattr(searches, "value", []):
